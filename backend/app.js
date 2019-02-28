@@ -3,12 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
 require('./globals');
-require('./populateDb');
 
 var app = express();
 
@@ -25,12 +24,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
+
+if (process.env.NODE_ENV == 'development') {
+  // allow cors in development mode
+  app.use(cors());
+  // app.use(function (req, res, next) {
+
+  //   res.setHeader('Access-Control-Allow-Origin', '*');
+
+  //   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  //   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+  //   res.setHeader('Access-Control-Allow-Credentials', true);
+  //   next();
+  // });
+}
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -43,4 +57,11 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
+mongoose.connect('mongodb://localhost:27017/tacto-harshad', (err, db) => {
+  if (err) {
+    return console.error("Couldn't connect to database");
+  }
+  global.db = db;
+  require('./populateDb');
+});
 module.exports = app;

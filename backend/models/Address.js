@@ -1,9 +1,7 @@
-import {
-    Schema
-} from "mongoose";
 var zipcodes = require('zipcodes');
 
 var schema = new Schema({
+    area: String,
     city: {
         type: String,
         index: true
@@ -26,7 +24,7 @@ module.exports = mongoose.model("Address", schema);
 
 var functions = {
     getZip: function (address, res) {
-        if (address.city || !address.state || !address.country) {
+        if (!address.city || !address.state || !address.country) {
             return res.status(422).json({
                 error: "Insufficient arguments passed"
             });
@@ -40,7 +38,7 @@ var functions = {
             pincode: 1
         }).exec((err, address) => {
             if (address) {
-                res.status(200).json(address);
+                res.status(200).json(address.pincode);
             }
         });
     },
@@ -58,7 +56,7 @@ var functions = {
     getCountries: function (res) {
         Address.distinct('country').exec((err, result) => {
             if (result) {
-                res.status(200).json(result);
+                res.send(result);
             } else {
                 res.status(422).json(err);
             }

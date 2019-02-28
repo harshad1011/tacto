@@ -21,10 +21,10 @@ router.get('/countries', function (req, res) {
 });
 
 router.get('/states', function (req, res) {
-  Address.getStatesByCountry(req.params, res);
+  Address.getStatesByCountry(req.query, res);
 });
 
 router.get('/cities', function (req, res) {
-  Address.getCitiesByState(req.params, res);
+  Address.getCitiesByState(req.query, res);
 });
 module.exports = router;

@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-md-2">
+    <input type="number" class="form-control" placeholder="Please enter US zipcodes" [(ngModel)]="zipcode">
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-success" (click)="getAddressForZip()" [disabled]="!zipcode">Get Address</button>
+  </div>
+</div>
+<div class="col-md-2">
+  <div *ngIf="address">
+    <h3>Retrieved Address: </h3><label for="">{{address}}</label>
+  </div>
+</div>
